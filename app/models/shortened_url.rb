@@ -24,11 +24,12 @@ class ShortenedUrl < ActiveRecord::Base
   end
 
   def num_uniques
-    visits.distinct.count
+    visits.pluck(:user_id).uniq.size
   end
 
   def num_recent_uniques(num_minutes)
-
+    condition = ["created_at > ?", Time.now - num_minutes.minutes]
+    visits.where(condition).pluck(:user_id).uniq.size
   end
 
 
